@@ -5,9 +5,11 @@
   "main": "index.js",
   "dependencies": {
     "better-sqlite3": "^7.1.0",
+    "discord-command-parser": "^1.4.3",
     "discord.js": "^12.2.0",
     "enmap": "^5.3.1",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "fs-extra": "^9.0.1"
   },
   "devDependencies": {},
   "scripts": {

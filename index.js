@@ -1,13 +1,14 @@
 const Discord = require('discord.js');
 const Enmap = require("enmap")
+const parser = require("discord-command-parser")
 const token = process.env.TOKEN;
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-const fs = require("fs");
+const fs = require("fs-extra");
 client.settings = new Enmap("settings")
 const defaultSettings = {
     prefix: "w!",
-    welcomeChannel: "#welcome",
+    welcomeChannel: "welcome",
     welcomeMessage: "Welcome to {{guildname}}, {{user}}"
 }
 client.on('ready', () => {
@@ -39,14 +40,34 @@ client.on('guildMemberAdd', (member) => {
     message.replace("{{user}}", member.user.tag);
     message.replace("{{guildname}}", member.guild.name)
     message.replace("{{numberusers}}", member.guild.memberCount)
-
+    
 
 });
 client.on('message', (message) => {
-    if(message.author.bot || !message.guild)
+    if(message.author.bot || !message.guild) return
+    const prefix = client.settings.ensure(message.guild.id, defaultSettings)
+    const parsed = parser.parse(message, prefix, {
+        allowBots: false,
+        allowSelf: false,
+        ignorePrefixCase: false
+    });
+    if(!parsed.success) {
+        return
+    };
+    let {command} = parsed;
+    let args = parsed.arguments;
+    let cmd = client.commands.get(command)
+    if(!cmd) return
+    if (cmd.args==true && !args) {return message.channel.send(`${command.name} needs arguments ${message.author}!`)}
     console.log(message);
     if(message.content == "hello"){
         message.channel.send("Hello");
+    }
+    try {
+        cmd.execute(client, message, args);
+    } catch (error) {
+        console.error(error);
+        message.reply('there was an error trying to execute that command!');
     }
 });
 client.on('guildCreate', (guild) => {
