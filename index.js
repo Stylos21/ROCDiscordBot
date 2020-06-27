@@ -7,13 +7,8 @@ const fs = require("fs");
 client.settings = new Enmap("settings")
 const defaultSettings = {
     prefix: "w!",
-    welcomeChannel: "725802580428718081",
-    async welcome(user) {
-        const channel = client.channels.cache.get(this.welcomeChannel);
-        if(channel) {
-            message.channel.send()
-        }
-    }
+    welcomeChannel: "#welcome",
+    welcomeMessage: "Welcome to {{guildname}}, {{user}}"
 }
 client.on('ready', () => {
     console.log("Ready");
@@ -24,6 +19,29 @@ for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
 }
+client.on('guildMemberAdd', (member) => {
+    const message = client.settings.get(member.guild.id).welcomeMessage
+    const configChannel = client.settings.get(member.guild.id).welcomeChannel
+    let channel = member.guild.channels.find(ch=>ch.name==configChannel)
+    if(!channel) {
+    try {
+        member.guild.channels.create("welcome", {type: "text", permissionOvewrites: [
+            {
+                id: guild.id,
+                allow: ["VIEW_CHANNEL"],
+                deny: ["SEND_MESSAGES"]
+            }
+        ]})} catch (error){
+            console.log(error)
+        }
+
+    }
+    message.replace("{{user}}", member.user.tag);
+    message.replace("{{guildname}}", member.guild.name)
+    message.replace("{{numberusers}}", member.guild.memberCount)
+
+
+});
 client.on('message', (message) => {
     if(message.author.bot || !message.guild)
     console.log(message);
