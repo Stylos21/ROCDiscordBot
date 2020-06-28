@@ -3,6 +3,8 @@ const Enmap = require("enmap");
 const parser = require("discord-command-parser");
 const fs = require("fs-extra");
 
+const utils = require("./utils");
+
 const token = process.env.TOKEN;
 const client = new Discord.Client();
 
@@ -39,12 +41,6 @@ for (const filename of fs.readdirSync("./commands")) {
     }
 }
 
-async function getOrCreateChannelByName(guild, channelName, options) {
-    const channel = guild.channels.cache.find(ch => ch.name === channelName);
-    if (channel) return channel;
-    return guild.channels.create(channelName, options);
-}
-
 client.on("guildMemberAdd", async (member) => {
     const {guild, user} = member;
     const {
@@ -53,7 +49,7 @@ client.on("guildMemberAdd", async (member) => {
         welcomeChannelOptions: options,
     } = client.settings.get(guild.id);
 
-    getOrCreateChannelByName(guild, channelName, options)
+    utils.getOrCreateChannelByName(guild, channelName, options)
         .then(
             channel => {
                 let message = messageTemplate;
