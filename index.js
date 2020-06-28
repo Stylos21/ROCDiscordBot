@@ -49,6 +49,9 @@ client.on("message", (message) => {
     if (message.content === "test") {
         message.channel.send("hi");
     }
+    if(message.content.startsWith("w!")) {
+        message.channel.send(`Saw message "${message.content}"`);
+    }
     if (message.author.bot || !message.guild) return;
     const prefix = client.settings.ensure(message.guild.id, defaultSettings).prefix;
     const parsed = parser.parse(message, prefix, {
