@@ -3,6 +3,6 @@ module.exports = {
     description: "dsaklsajkla",
     syntax: "test",
     async execute(client, message, args) {
-        message.channel.send("fkdjhfdkljfslf")
-    }
-}
+        message.channel.send("fkdjhfdkljfslf");
+    },
+};
