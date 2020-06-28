@@ -24,7 +24,7 @@ for (const file of commandFiles) {
 client.on("guildMemberAdd", async (member) => {
     let message = client.settings.get(member.guild.id).welcomeMessage;
     const configChannel = client.settings.get(member.guild.id).welcomeChannel;
-    let channel = member.guild.channels.find(ch => ch.name === configChannel);
+    let channel = member.guild.channels.cache.find(ch => ch.name === configChannel);
     if (!channel) {
         try {
             channel = await member.guild.channels.create("welcome", {
