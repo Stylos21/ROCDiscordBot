@@ -21,25 +21,29 @@ for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.name, command);
 }
-client.on("guildMemberAdd", (member) => {
-    const message = client.settings.get(member.guild.id).welcomeMessage;
+client.on("guildMemberAdd", async (member) => {
+    let message = client.settings.get(member.guild.id).welcomeMessage;
     const configChannel = client.settings.get(member.guild.id).welcomeChannel;
     let channel = member.guild.channels.find(ch => ch.name === configChannel);
     if (!channel) {
-        member.guild.channels.create("welcome", {
-            type: "text", permissionOverwrites: [
-                {
-                    id: member.guild.id,
-                    allow: ["VIEW_CHANNEL"],
-                    deny: ["SEND_MESSAGES"],
-                },
-            ],
-        }).catch((error) => console.log(error));
-
+        try {
+            channel = await member.guild.channels.create("welcome", {
+                type: "text", permissionOverwrites: [
+                    {
+                        id: member.guild.id,
+                        allow: ["VIEW_CHANNEL"],
+                        deny: ["SEND_MESSAGES"],
+                    },
+                ],
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
-    // message.replace("{{user}}", member.user.tag);
-    // message.replace("{{guildname}}", member.guild.name);
-    // message.replace("{{numberusers}}", member.guild.memberCount);
+    message = message.replace("{{user}}", member.user.tag);
+    message = message.replace("{{guildname}}", member.guild.name);
+    message = message.replace("{{numberusers}}", member.guild.memberCount.toString());
+    channel.send(message);
 });
 client.on("message", (message) => {
     if (message.content === "test") {
