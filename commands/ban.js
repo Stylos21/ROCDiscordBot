@@ -11,10 +11,10 @@ module.exports = {
         }
         let toban = message.mentions.members.first();
         try {
-            await toban.ban().catch(() => `Could not ban ${toban.displayName}.`);
+            await toban.ban();
+            message.channel.send(`:white_check_mark:${toban.displayName} was banned! :point_right:`);
         } catch {
-            message.channel.send(`Could not ban ${toban}!`);
+            message.channel.send(`Could not ban ${toban.displayName}!`);
         }
-        message.channel.send(`:white_check_mark:${toban.displayName} was banned! :point_right:`);
     },
 };
