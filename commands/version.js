@@ -1,7 +1,7 @@
-const {exec: execSync} = require("child_process");
+const {exec: execCallback} = require("child_process");
 const util = require("util");
 
-const exec = util.promisify(execSync);
+const exec = util.promisify(execCallback);
 
 module.exports = {
     name: "version",
