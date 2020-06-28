@@ -1,4 +1,4 @@
-import {isOwner} from "../utils";
+const {isOwner} = require("../utils");
 
 const path = require("path");
 const _ = require("lodash");
