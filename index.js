@@ -58,6 +58,7 @@ client.on('message', (message) => {
     if(!parsed.success) {
         return
     };
+    message.channel.send(`Got command "${message.content}"`);
     let command = parsed.command;
     let args = parsed.arguments;
     let cmd = client.commands.get(command)
