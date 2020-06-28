@@ -24,31 +24,25 @@ for (const file of commandFiles) {
 client.on("guildMemberAdd", (member) => {
     const message = client.settings.get(member.guild.id).welcomeMessage;
     const configChannel = client.settings.get(member.guild.id).welcomeChannel;
-    let channel = member.guild.channels.find(ch => ch.name == configChannel);
+    let channel = member.guild.channels.find(ch => ch.name === configChannel);
     if (!channel) {
-        try {
-            member.guild.channels.create("welcome", {
-                type: "text", permissionOvewrites: [
-                    {
-                        id: guild.id,
-                        allow: ["VIEW_CHANNEL"],
-                        deny: ["SEND_MESSAGES"],
-                    },
-                ],
-            });
-        } catch (error) {
-            console.log(error);
-        }
+        member.guild.channels.create("welcome", {
+            type: "text", permissionOverwrites: [
+                {
+                    id: member.guild.id,
+                    allow: ["VIEW_CHANNEL"],
+                    deny: ["SEND_MESSAGES"],
+                },
+            ],
+        }).catch((error) => console.log(error));
 
     }
-    message.replace("{{user}}", member.user.tag);
-    message.replace("{{guildname}}", member.guild.name);
-    message.replace("{{numberusers}}", member.guild.memberCount);
-
-
+    // message.replace("{{user}}", member.user.tag);
+    // message.replace("{{guildname}}", member.guild.name);
+    // message.replace("{{numberusers}}", member.guild.memberCount);
 });
 client.on("message", (message) => {
-    if (message.content == "test") {
+    if (message.content === "test") {
         message.channel.send("hi");
     }
     if (message.author.bot || !message.guild) return;
@@ -61,24 +55,22 @@ client.on("message", (message) => {
     if (!parsed.success) {
         return;
     }
-    ;
+
     message.channel.send(`Got command "${message.content}"`);
     let command = parsed.command;
     let args = parsed.arguments;
     let cmd = client.commands.get(command);
     if (!cmd) return;
-    if (cmd.args == true && !args) {
+    if (cmd.args === true && !args) {
         return message.channel.send(`${command.name} needs arguments ${message.author}!`);
     }
-    if (message.content == "hello") {
+    if (message.content === "hello") {
         message.channel.send("Hello");
     }
-    try {
-        cmd.execute(client, message, args);
-    } catch (error) {
+    cmd.execute(client, message, args).catch((error) => {
         console.error(error);
         message.reply("there was an error trying to execute that command!");
-    }
+    });
 });
 client.on("guildCreate", (guild) => {
     client.settings.ensure(guild.id, defaultSettings);

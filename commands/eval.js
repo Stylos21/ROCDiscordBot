@@ -12,7 +12,7 @@ module.exports = {
     async execute(client, message, args) {
         if (!client.config.owners.includes(message.author.id)) return message.reply(`You are not authorized to run this command!`);
         let silent = false;
-        if (args[0] == "-s") {
+        if (args[0] === "-s") {
             silent = true;
             args.shift();
         }
