@@ -17,14 +17,16 @@ client.settings = new Enmap("settings");
 const defaultSettings = {
     prefix: "w!",
     welcomeChannel: "welcome",
-    welcomeChannelOptions: {
-        permissionOverwrites: [
-            {
-                id: guild.id,
-                allow: ["VIEW_CHANNEL"],
-                deny: ["SEND_MESSAGES"],
-            },
-        ],
+    getWelcomeChannelOptions(guild) {
+        return {
+            permissionOverwrites: [
+                {
+                    id: guild.id,
+                    allow: ["VIEW_CHANNEL"],
+                    deny: ["SEND_MESSAGES"],
+                },
+            ],
+        };
     },
     welcomeMessage: "Welcome to {{guildname}}, {{user}}",
 };
@@ -46,8 +48,9 @@ client.on("guildMemberAdd", async (member) => {
     const {
         welcomeMessage: messageTemplate,
         welcomeChannel: channelName,
-        welcomeChannelOptions: options,
+        getWelcomeChannelOptions: getOptions,
     } = client.settings.get(guild.id);
+    const options = getOptions(guild);
 
     utils.getOrCreateChannelByName(guild, channelName, options)
         .then(
