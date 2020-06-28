@@ -96,14 +96,9 @@ client.on("message", message => {
 
     const handler = client.commands.get(command);
 
-    if (!handler) return;
-
-    if (handler.args === true && !arguments) {
-        return message.reply(`${command.name} needs arguments ${author}!`);
-    }
-
-    if (content === "hello") {
-        message.reply("Hello");
+    if (!handler) {
+        message.reply("invalid command");
+        return;
     }
 
     handler.execute(client, message, arguments).catch((error) => {
