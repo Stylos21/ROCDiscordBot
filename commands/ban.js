@@ -3,18 +3,22 @@ module.exports = {
     description: "ban a member",
     syntax: "`ban` <user>",
     async execute(client, message, args) {
-        if (!message.member.hasPermission("BAN_MEMBERS")) {
-            return message.channel.send(`${message.author}, you don't have permission to use this command!`);
-        }
-        if (!message.guild.me.hasPermission("BAN_MEMBERS")) {
-            return message.channel.send(`${message.author}, I don't have ban permissions!`);
-        }
-        let toban = message.mentions.members.first();
+        const {member: sender, channel, guild, mentions} = message;
+
+        if (!sender.hasPermission("BAN_MEMBERS"))
+            return channel.send(`${sender}, you don't have permission to use this command!`);
+
+        if (!guild.me.hasPermission("BAN_MEMBERS"))
+            return channel.send(`${sender}, I don't have ban permissions!`);
+
+        let target = mentions.members.first();
+
         try {
-            await toban.ban();
-            message.channel.send(`:white_check_mark:${toban.displayName} was banned! :point_right:`);
-        } catch {
-            message.channel.send(`Could not ban ${toban.displayName}!`);
+            await target.ban();
+            channel.send(`:white_check_mark: ${target.displayName} was banned! :point_right:`);
+        } catch(error) {
+            channel.send(`Could not ban ${target.displayName}!`);
+            console.error(error);
         }
     },
 };
