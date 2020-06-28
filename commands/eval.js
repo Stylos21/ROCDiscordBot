@@ -1,3 +1,5 @@
+import {isOwner} from "../utils";
+
 const path = require("path");
 const _ = require("lodash");
 const wait = require("util").promisify((x) => setTimeout(null, x));
@@ -10,7 +12,10 @@ module.exports = {
     aliases: [""],
     hidden: true,
     async execute(client, message, args) {
-        if (!client.config.owners.includes(message.author.id)) return message.reply(`You are not authorized to run this command!`);
+        const app = await client.fetchApplication();
+        if (isOwner(app, message.author))
+            return message.reply(`You are not authorized to run this command!`);
+
         let silent = false;
         if (args[0] === "-s") {
             silent = true;

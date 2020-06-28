@@ -3,3 +3,8 @@ export async function getOrCreateChannelByName(guild, channelName, options) {
     if (channel) return channel;
     return guild.channels.create(channelName, options);
 }
+
+export function isOwner(app, user) {
+    const {owner, members} = app;
+    return owner.id === user.id || (members && members.has(user.id));
+}
