@@ -28,7 +28,7 @@ module.exports = {
         };
         try {
             const code = args.join(" ");
-            let evaled = await eval(code);
+            let evaled = eval(code);
             console.log(`Trying to evaluate ${code}`);
             if (typeof evaled !== "string")
                 evaled = require("util").inspect(evaled);
