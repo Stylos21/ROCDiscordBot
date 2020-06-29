@@ -1,0 +1,13 @@
+name: Reload server
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Run a one-line script
+      run: curl example.com # change this
