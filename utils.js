@@ -11,4 +11,7 @@ module.exports = {
     wait(millis) {
         return new Promise((resolve, reject) => setTimeout(resolve, millis));
     },
+    escapeDiscordMessage(message) {
+        return message.replace(/[`@#]/, "\\$1")
+    },
 };
